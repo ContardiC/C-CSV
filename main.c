@@ -7,11 +7,12 @@ typedef struct {
 
 
 int main() {
-    Contatto contatti[100];
+    Contatto contatti[100], temp;
     // menu principale
     int opt;
     int gonext=0;
     int i=0;
+    char ch;
     FILE *fp;
     do {
         printf("1- Salva un contatto\n");
@@ -22,7 +23,7 @@ int main() {
         switch(opt){
             case 1:
                 //controllo se posso usare il file
-                fp=fopen("rubrica.txt","a");
+                fp=fopen("rubrica.csv","a");
                 if(fp==NULL){
                     puts("Mi spiace non posso salvare contatti");
                 }else{
@@ -44,12 +45,20 @@ int main() {
                 break;
             case 2:
                 //controllo se posso aprire il file
-                fp=fopen("rubrica.txt","r");
+                fp=fopen("rubrica.csv","r");
                 if(fp==NULL){
                     puts("Mi spiace, non posso leggere i contatti nel file");
                     //TODO: leggere quelli in memoria?
                 }else{
+                    // leggo il file
 
+                    while(!feof(fp)){
+                        fscanf(fp,"%[^;];%[^\n]\n",temp.nome,temp.cognome);
+                        printf("NOME: %s COGNOME: %s\n",temp.nome,temp.cognome);
+                    }
+
+
+                    fclose(fp);
                 }
 
                 break;

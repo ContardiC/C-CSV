@@ -1,71 +1,68 @@
 #include<stdio.h>
 #include<string.h>
-typedef struct {
-    char nome[61];
-    char cognome[61];
-} Contatto;
+typedef struct{
+    char firstname[61];
+    char lastname[61];
+}Contact;
+Contact contacts[100], tmp;
 
-
-int main() {
-    Contatto contatti[100], temp;
-    // menu principale
+int main(){
     int opt;
     int gonext=0;
-    int i=0;
-    char ch;
+    int i,j;
     FILE *fp;
-    do {
-        printf("1- Salva un contatto\n");
-        printf("2- Leggi il file \n");
-        printf("0- Esci dal programma\n");
-        scanf("%d", &opt);
+    //main menu
+    do{
+        puts("1 - Salva un contatto ");
+        puts("2 - Leggi tutti i contatti");
+        puts("0 - Esci dal programma");
+        //TODO: aggiungere opzioni
+        scanf("%d",&opt);
         fflush(stdin);
-        switch(opt){
+        // operazioni
+        switch(opt) {
             case 1:
-                //controllo se posso usare il file
-                fp=fopen("rubrica.csv","a");
-                if(fp==NULL){
-                    puts("Mi spiace non posso salvare contatti");
+                i=0;
+                do{
+                    puts("Nome del contatto");
+                    scanf("%s",contacts[i].firstname);
+                    puts("Cognome del contatto");
+                    scanf("%s",contacts[i].lastname);
+                    puts("1 - Altro contatto ");
+                    puts("0 - Esci");
+                    scanf("%d",&gonext);
+                    fflush(stdin);
+                    i++;
+                    //TODO: sistemare condizioni
+                }while(gonext==1 && i<100);
+                // salvo i dati letti
+                fp= fopen("contacts.csv","a");
+                if(fp!=NULL){
+                    for(j=0;j<i;j++) {
+                        fprintf(fp, "%s;%s\n", contacts[j].firstname, contacts[j].lastname);
+                    }
                 }else{
-                    // data entry
-                    do{
-                        puts("Inserisci il nome");
-                        gets(contatti[i].nome);
-                        puts("Inserisci il cognome");
-                        gets(contatti[i].cognome);
-                        puts("Vuoi inserire un altro contatto? 1-si 0-no");
-                        scanf("%d",&gonext);
-                        fflush(stdin);
-                        // scrivo il contatto nel file
-                        fprintf(fp,"%s;%s\n",contatti[i].nome, contatti[i].cognome);
-                        i++;
-                    }while(gonext==1);
-                    fclose(fp);
+                    puts("Mi spiace non posso salvare i tuoi dati");
                 }
+                fclose(fp);
                 break;
             case 2:
-                //controllo se posso aprire il file
-                fp=fopen("rubrica.csv","r");
+                fp=fopen("contacts.csv","r");
                 if(fp==NULL){
-                    puts("Mi spiace, non posso leggere i contatti nel file");
-                    //TODO: leggere quelli in memoria?
+                    puts("Non posso leggere i contatti");
                 }else{
-                    // leggo il file
-
                     while(!feof(fp)){
-                        fscanf(fp,"%[^;];%[^\n]\n",temp.nome,temp.cognome);
-                        printf("NOME: %s COGNOME: %s\n",temp.nome,temp.cognome);
+                        fscanf(fp,"%[^;];%[^\n]\n",tmp.firstname,tmp.lastname);
+                        printf("NOME: %s COGNOME: %s\n",tmp.firstname,tmp.lastname);
                     }
-
-
-                    fclose(fp);
                 }
-
+                fclose(fp);
                 break;
             default:
-                puts("Ops, qualcosa non funziona");
+                puts("Ops, qualcosa e' andato storto");
         }
-    } while (opt != 0);
+        //TODO: sistemare condizioni
+    }while(opt!=0);
 
     return 0;
 }
